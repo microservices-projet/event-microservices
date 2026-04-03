@@ -1,0 +1,95 @@
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero__content">
+    <h1 class="hero__title">Decouvrez les meilleurs <span class="hero__highlight">evenements</span></h1>
+    <p class="hero__subtitle">
+      Explorez, reservez et participez aux evenements les plus passionnants pres de chez vous.
+    </p>
+    <div class="hero__actions">
+      <a routerLink="/events" class="btn-ija btn-ija--primary btn-ija--lg">Explorer les evenements</a>
+      <a routerLink="/auth/register" class="btn-ija btn-ija--outline btn-ija--lg">Creer un compte</a>
+    </div>
+  </div>
+</section>
+
+<!-- Trending Events -->
+<section class="ija-page ija-section" *ngIf="!loading && selectedDayEvents.length > 0">
+  <div class="ija-section__header">
+    <h2 class="ija-section__title">A La Une</h2>
+    <a routerLink="/events" class="ija-section__link">Tous</a>
+  </div>
+  <div class="ija-grid ija-grid--3">
+    <a *ngFor="let event of selectedDayEvents" [routerLink]="['/events', event.id]" class="trending-card ija-card motion-card-lift motion-fade-up">
+      <div class="trending-card__img" [style.backgroundImage]="'url(' + (event.imageUrl || 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600') + ')'">
+        <span class="ija-badge ija-badge--primary trending-card__price">{{ event.price === 0 ? 'Gratuit' : event.price + ' TND' }}</span>
+      </div>
+      <div class="trending-card__body">
+        <h3 class="trending-card__title">{{ event.title }}</h3>
+        <p class="trending-card__meta">{{ event.place }} &bull; {{ event.date | date:'dd MMM yyyy' }}</p>
+        <div class="trending-card__footer">
+          <span class="trending-card__places">{{ event.nbPlaces }} places</span>
+          <span class="trending-card__likes">{{ event.nbLikes }} likes</span>
+        </div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- Empty state -->
+<section class="ija-page ija-section" *ngIf="!loading && selectedDayEvents.length === 0">
+  <div class="ija-section__header">
+    <h2 class="ija-section__title">A La Une</h2>
+    <a routerLink="/events" class="ija-section__link">Tous</a>
+  </div>
+  <p class="ija-text-muted">Aucun evenement pour cette date.</p>
+</section>
+
+<!-- Cities -->
+<section class="ija-page ija-section">
+  <div class="ija-section__header">
+    <h2 class="ija-section__title">Explorer par ville</h2>
+  </div>
+  <div class="ija-grid ija-grid--cities">
+    <a *ngFor="let city of cities" [routerLink]="['/events']" [queryParams]="{place: city.name}" class="city-card"
+       [style.backgroundImage]="'url(' + city.image + ')'">
+      <span class="city-card__overlay"></span>
+      <span class="city-card__name">{{ city.name }}</span>
+    </a>
+  </div>
+</section>
+
+<!-- Categories -->
+<section class="ija-page ija-section">
+  <div class="ija-section__header">
+    <h2 class="ija-section__title">Categories</h2>
+  </div>
+  <div class="ija-grid ija-grid--4">
+    <a *ngFor="let cat of categories" routerLink="/events" class="cat-card"
+       [style.backgroundImage]="'url(' + cat.image + ')'">
+      <span class="cat-card__overlay"></span>
+      <span class="cat-card__name">{{ cat.name }}</span>
+    </a>
+  </div>
+</section>
+
+<!-- Stats -->
+<section class="ija-page ija-section">
+  <div class="stats-bar">
+    <div class="stats-bar__item">
+      <span class="stats-bar__number">500+</span>
+      <span class="stats-bar__label">Evenements</span>
+    </div>
+    <div class="stats-bar__item">
+      <span class="stats-bar__number">10K+</span>
+      <span class="stats-bar__label">Utilisateurs</span>
+    </div>
+    <div class="stats-bar__item">
+      <span class="stats-bar__number">50+</span>
+      <span class="stats-bar__label">Villes</span>
+    </div>
+    <div class="stats-bar__item">
+      <span class="stats-bar__number">98%</span>
+      <span class="stats-bar__label">Satisfaction</span>
+    </div>
+  </div>
+</section>

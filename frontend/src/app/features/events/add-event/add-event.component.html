@@ -1,0 +1,87 @@
+<div class="ija-page">
+  <h1 class="ija-page__title">{{ editMode ? 'Modifier l\'evenement' : 'Nouvel evenement' }}</h1>
+
+  <div class="add-form-card ija-card">
+    <form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
+      <div class="form-grid">
+        <div class="ija-form-group">
+          <label for="title">Titre</label>
+          <input id="title" type="text" class="ija-input" formControlName="title" placeholder="Titre de l'evenement">
+          <div class="ija-error" *ngIf="title?.invalid && title?.touched">
+            <span *ngIf="title?.errors?.['required']">Ce champ est requis</span>
+            <span *ngIf="title?.errors?.['minlength']">Minimum 3 caracteres</span>
+          </div>
+        </div>
+
+        <div class="ija-form-group">
+          <label for="lieu">Lieu</label>
+          <input id="lieu" type="text" class="ija-input" formControlName="lieu" placeholder="Lieu de l'evenement">
+          <div class="ija-error" *ngIf="eventForm.get('lieu')?.touched && eventForm.get('lieu')?.invalid">
+            <span>Ce champ est requis</span>
+          </div>
+        </div>
+
+        <div class="ija-form-group">
+          <label for="date">Date</label>
+          <input id="date" type="date" class="ija-input" formControlName="date">
+          <div class="ija-error" *ngIf="date?.invalid && date?.touched">
+            <span *ngIf="date?.errors?.['required']">Ce champ est requis</span>
+            <span *ngIf="date?.errors?.['futureDateInvalid']">{{ date?.errors?.['futureDateInvalid'] }}</span>
+          </div>
+        </div>
+
+        <div class="ija-form-group">
+          <label for="prix">Prix (TND)</label>
+          <input id="prix" type="text" class="ija-input" formControlName="prix" placeholder="0">
+          <div class="ija-error" *ngIf="eventForm.get('prix')?.touched && eventForm.get('prix')?.invalid">
+            <span>Prix invalide</span>
+          </div>
+        </div>
+
+        <div class="ija-form-group">
+          <label for="nbrPlace">Nombre de places</label>
+          <input id="nbrPlace" type="number" class="ija-input" formControlName="nbrPlace" placeholder="100" min="1">
+          <div class="ija-error" *ngIf="eventForm.get('nbrPlace')?.touched && eventForm.get('nbrPlace')?.invalid">
+            <span>Minimum 1 place</span>
+          </div>
+        </div>
+
+        <div class="ija-form-group">
+          <label for="urlImage">URL de l'image</label>
+          <input id="urlImage" type="text" class="ija-input" formControlName="urlImage" placeholder="https://...">
+        </div>
+      </div>
+
+      <div class="ija-form-group">
+        <label for="desc">Description</label>
+        <textarea id="desc" class="ija-input add-textarea" formControlName="description"
+                  placeholder="Description detaillee de l'evenement" rows="4"></textarea>
+        <div class="ija-error" *ngIf="description?.invalid && description?.touched">
+          <span *ngIf="description?.errors?.['required']">Ce champ est requis</span>
+          <span *ngIf="description?.errors?.['minlength']">Minimum 10 caracteres</span>
+        </div>
+      </div>
+
+      <div class="ija-form-group" formArrayName="domaines">
+        <label>Domaines</label>
+        <div class="domain-list">
+          <div *ngFor="let ctrl of domaines.controls; let i = index" class="domain-row">
+            <input [formControlName]="i" class="ija-input" placeholder="Ex: Tech, Sport, Culture...">
+            <button type="button" class="btn-ija btn-ija--danger btn-ija--sm" (click)="removeDomain(i)"
+                    *ngIf="domaines.length > 1">&times;</button>
+          </div>
+        </div>
+        <button type="button" class="btn-ija btn-ija--ghost btn-ija--sm" (click)="addDomain()">+ Ajouter un domaine</button>
+      </div>
+
+      <div class="add-form-error" *ngIf="error">{{ error }}</div>
+
+      <div class="add-form-actions">
+        <button type="submit" class="btn-ija btn-ija--primary btn-ija--lg" [disabled]="eventForm.invalid || loading">
+          {{ loading ? 'Sauvegarde...' : (editMode ? 'Enregistrer' : 'Creer l\'evenement') }}
+        </button>
+        <a routerLink="/events" class="btn-ija btn-ija--ghost btn-ija--lg">Annuler</a>
+      </div>
+    </form>
+  </div>
+</div>

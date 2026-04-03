@@ -1,0 +1,39 @@
+<div class="ija-page">
+  <div class="list-header">
+    <h1 class="ija-page__title">{{ mineOnly ? 'Mes événements' : 'Événements' }}</h1>
+    <div class="list-header__actions">
+      <a
+        *ngIf="auth.currentUser"
+        [routerLink]="['/events']"
+        [queryParams]="mineOnly ? {} : { mine: '1' }"
+        class="btn-ija btn-ija--ghost btn-ija--sm"
+      >
+        {{ mineOnly ? 'Tout afficher' : 'Mes événements' }}
+      </a>
+      <a *ngIf="roles.canCreateOrEditEvents()" routerLink="./add" class="btn-ija btn-ija--primary">+ Nouvel événement</a>
+    </div>
+  </div>
+
+  <div class="list-search">
+    <input type="text" class="ija-input" placeholder="Rechercher par titre ou lieu..."
+           [(ngModel)]="searchItem">
+  </div>
+
+  <div class="list-loading" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Chargement des evenements...</p>
+  </div>
+
+  <div class="list-empty" *ngIf="!loading && filteredEvents.length === 0">
+    <p class="list-empty__text">Aucun evenement trouve</p>
+    <a *ngIf="roles.canCreateOrEditEvents()" routerLink="./add" class="btn-ija btn-ija--outline">Creer le premier evenement</a>
+  </div>
+
+  <div class="ija-grid ija-grid--3" *ngIf="!loading && filteredEvents.length > 0">
+    <app-card *ngFor="let event of filteredEvents"
+              [event]="event"
+              (notifLike)="onLike($event)"
+              (notifBuy)="onBuy($event)">
+    </app-card>
+  </div>
+</div>

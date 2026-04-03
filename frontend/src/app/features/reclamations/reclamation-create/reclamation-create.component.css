@@ -1,0 +1,6 @@
+.rec-form-card { padding: 2rem; max-width: 700px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.rec-textarea { resize: vertical; min-height: 120px; }
+.rec-form-error { background: rgba(220,38,38,0.1); border: 1px solid var(--ija-danger); border-radius: var(--ija-radius); padding: 0.75rem 1rem; color: var(--ija-danger); font-size: 0.9rem; margin-bottom: 1rem; }
+.rec-form-actions { display: flex; gap: 1rem; margin-top: 1rem; }
+@media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }

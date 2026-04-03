@@ -1,0 +1,93 @@
+{
+  "realm": "event-app",
+  "enabled": true,
+  "sslRequired": "external",
+  "registrationAllowed": true,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "roles": {
+    "realm": [
+      { "name": "USER" },
+      { "name": "ADMIN" }
+    ]
+  },
+  "users": [
+    {
+      "username": "event-admin",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "event-admin@local.test",
+      "firstName": "Event",
+      "lastName": "Administrator",
+      "realmRoles": ["USER", "ADMIN"],
+      "requiredActions": [],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "EventAdmin@2026!",
+          "temporary": false
+        }
+      ]
+    },
+    {
+      "username": "saladin",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "saladin@local.test",
+      "firstName": "Saladin",
+      "lastName": "Admin",
+      "realmRoles": ["USER", "ADMIN"],
+      "requiredActions": [],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Saladin@2026!",
+          "temporary": false
+        }
+      ]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "event-frontend",
+      "name": "event-frontend",
+      "enabled": true,
+      "publicClient": true,
+      "protocol": "openid-connect",
+      "redirectUris": [
+        "http://localhost:4200/*",
+        "http://127.0.0.1:4200/*"
+      ],
+      "webOrigins": [
+        "http://localhost:4200",
+        "http://127.0.0.1:4200"
+      ],
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true
+    },
+    {
+      "clientId": "gateway",
+      "name": "gateway",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "gateway-secret",
+      "protocol": "openid-connect",
+      "serviceAccountsEnabled": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true
+    },
+    {
+      "clientId": "event-backend",
+      "name": "event-backend",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "event-backend-secret",
+      "protocol": "openid-connect",
+      "serviceAccountsEnabled": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true
+    }
+  ]
+}

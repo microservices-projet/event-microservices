@@ -1,0 +1,41 @@
+<div class="calendar-strip" [class.calendar-strip--compact]="compact">
+  <div class="calendar-strip__header">
+    <button class="calendar-nav" type="button" (click)="shiftMonth(-1)" aria-label="Mois précédent">
+      ‹
+    </button>
+    <div class="calendar-strip__month" aria-live="polite">{{ monthLabel | titlecase }}</div>
+    <button class="calendar-nav" type="button" (click)="shiftMonth(1)" aria-label="Mois suivant">
+      ›
+    </button>
+  </div>
+
+  <div class="calendar-strip__today">
+    <button class="calendar-today" type="button" (click)="goToToday()">Aujourd'hui</button>
+  </div>
+
+  <div class="calendar-strip__scroller" role="tablist" aria-label="Day selector">
+    <button
+      class="calendar-chip"
+      *ngFor="let day of displayDays"
+      type="button"
+      (click)="selectDay(day.ymd)"
+      [class.calendar-chip--active]="day.ymd === selectedYmd"
+      [class.calendar-chip--weekend]="day.weekend"
+    >
+      <span class="calendar-chip__dow">{{ day.dow }}</span>
+      <span class="calendar-chip__num">{{ day.dayNumber }}</span>
+
+      <span class="calendar-chip__dots" aria-hidden="true">
+        <span class="calendar-chip__dot" *ngFor="let _ of day.dots"></span>
+      </span>
+
+      <span
+        class="calendar-chip__count"
+        *ngIf="day.eventCount > 0 && (!compact || day.ymd === selectedYmd)"
+      >
+        {{ day.eventCount }}
+      </span>
+    </button>
+  </div>
+</div>
+

@@ -1,0 +1,206 @@
+.calendar-strip {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.calendar-strip--compact .calendar-strip__header {
+  padding: 0.05rem 0;
+  gap: 0.4rem;
+}
+
+.calendar-strip--compact .calendar-strip__month {
+  font-size: 0.82rem;
+}
+
+.calendar-strip--compact .calendar-nav {
+  width: 24px;
+  height: 24px;
+  border-radius: 9px;
+  font-size: 1rem;
+}
+
+.calendar-strip--compact .calendar-strip__today {
+  display: none;
+}
+
+.calendar-strip--compact .calendar-strip__scroller {
+  gap: 0.25rem;
+  padding: 0.05rem 0.05rem 0.25rem;
+}
+
+.calendar-strip--compact .calendar-chip {
+  padding: 0.22rem 0.28rem;
+  min-width: 34px;
+  border-radius: 12px;
+}
+
+.calendar-strip--compact .calendar-chip__dow {
+  font-size: 0.52rem;
+  margin-bottom: 0.02rem;
+}
+
+.calendar-strip--compact .calendar-chip__num {
+  font-size: 0.74rem;
+}
+
+.calendar-strip--compact .calendar-chip__dots {
+  gap: 0.12rem;
+  margin-top: 0.07rem;
+  min-height: 5px;
+}
+
+.calendar-strip--compact .calendar-chip__dot {
+  width: 3px;
+  height: 3px;
+}
+
+.calendar-strip--compact .calendar-chip__count {
+  font-size: 0.56rem;
+  margin-top: 0.06rem;
+}
+
+.calendar-strip__header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.1rem 0;
+}
+
+.calendar-strip__month {
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--ija-text);
+}
+
+.calendar-nav {
+  width: 32px;
+  height: 32px;
+  border-radius: 12px;
+  border: 1px solid var(--ija-border);
+  background: var(--ija-surface);
+  color: var(--ija-text);
+  cursor: pointer;
+  transition: transform var(--motion-fast, 0.15s) ease, border-color 0.15s ease, background 0.15s ease;
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.calendar-nav:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--ija-primary) 35%, var(--ija-border));
+  background: var(--ija-bg-card);
+}
+
+.calendar-strip__today {
+  display: flex;
+  justify-content: flex-end;
+  margin: -0.15rem 0 0.4rem;
+}
+
+.calendar-today {
+  border: 1px solid var(--ija-border);
+  background: var(--ija-surface);
+  color: var(--ija-text);
+  border-radius: 14px;
+  padding: 0.35rem 0.75rem;
+  cursor: pointer;
+  font-weight: 800;
+  transition: background var(--motion-fast, 0.15s) ease, border-color 0.15s ease, transform 0.15s ease;
+  font-size: 0.85rem;
+}
+
+.calendar-today:hover {
+  background: var(--color-primary-soft);
+  border-color: color-mix(in srgb, var(--ija-primary) 40%, var(--ija-border));
+  transform: translateY(-1px);
+}
+
+.calendar-strip__scroller {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding: 0.25rem 0.25rem 0.65rem;
+  scrollbar-width: none;
+}
+
+.calendar-strip__scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.calendar-chip {
+  appearance: none;
+  border: 1px solid var(--ija-border);
+  background: var(--ija-bg-card);
+  color: var(--ija-text);
+  border-radius: 16px;
+  padding: 0.38rem 0.55rem;
+  min-width: 46px;
+  cursor: pointer;
+  transition: transform var(--motion-fast, 0.15s) ease, border-color 0.15s ease, background 0.15s ease,
+    box-shadow var(--motion-fast, 0.15s) ease;
+  position: relative;
+}
+
+.calendar-chip:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--ija-primary) 30%, var(--ija-border));
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+}
+
+.calendar-chip--active {
+  border-color: var(--ija-primary);
+  background: var(--color-primary-soft);
+}
+
+.calendar-chip--weekend {
+  border-color: color-mix(in srgb, var(--ija-border) 85%, var(--ija-text-muted));
+}
+
+.calendar-chip__dow {
+  display: block;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  color: var(--ija-text-muted);
+  text-transform: uppercase;
+  margin-bottom: 0.1rem;
+}
+
+.calendar-chip__num {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 900;
+  color: var(--ija-text);
+}
+
+.calendar-chip__dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.2rem;
+  margin-top: 0.2rem;
+  min-height: 7px;
+}
+
+.calendar-chip__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--ija-border);
+}
+
+.calendar-chip--active .calendar-chip__dot {
+  background: var(--ija-primary);
+}
+
+.calendar-chip__count {
+  display: inline-block;
+  margin-top: 0.2rem;
+  font-size: 0.7rem;
+  font-weight: 900;
+  color: var(--ija-text-muted);
+}
+
+.calendar-chip--active .calendar-chip__count {
+  color: var(--ija-primary);
+}

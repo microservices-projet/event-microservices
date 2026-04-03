@@ -1,0 +1,45 @@
+<div class="ija-page">
+  <h1 class="ija-page__title">Nouvelle reclamation</h1>
+
+  <div class="rec-form-card ija-card">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="ija-form-group">
+        <label for="subject">Sujet</label>
+        <input id="subject" type="text" class="ija-input" formControlName="subject" placeholder="Sujet de la reclamation">
+      </div>
+
+      <div class="ija-form-group">
+        <label for="type">Type</label>
+        <select id="type" class="ija-input" formControlName="type">
+          <option *ngFor="let t of types" [value]="t">{{ t }}</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="ija-form-group">
+          <label for="eventId">ID Evenement (optionnel)</label>
+          <input id="eventId" type="number" class="ija-input" formControlName="eventId" placeholder="Ex: 1">
+        </div>
+        <div class="ija-form-group">
+          <label for="ticketId">ID Ticket (optionnel)</label>
+          <input id="ticketId" type="number" class="ija-input" formControlName="ticketId" placeholder="Ex: 1">
+        </div>
+      </div>
+
+      <div class="ija-form-group">
+        <label for="description">Description</label>
+        <textarea id="description" class="ija-input rec-textarea" formControlName="description"
+                  placeholder="Decrivez votre reclamation en detail..." rows="5"></textarea>
+      </div>
+
+      <div class="rec-form-error" *ngIf="error">{{ error }}</div>
+
+      <div class="rec-form-actions">
+        <button type="submit" class="btn-ija btn-ija--primary btn-ija--lg" [disabled]="form.invalid || loading">
+          {{ loading ? 'Envoi...' : 'Soumettre la reclamation' }}
+        </button>
+        <a routerLink="/reclamations" class="btn-ija btn-ija--ghost btn-ija--lg">Annuler</a>
+      </div>
+    </form>
+  </div>
+</div>

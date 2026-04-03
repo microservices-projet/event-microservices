@@ -1,6 +1,17 @@
 HELP.md
 target/
+**/target/
+**/node_modules/
 .mvn/wrapper/maven-wrapper.jar
+
+# Secrets and local env
+microservices/.env
+.env
+.env.local
+
+# Logs and runtime noise
+*.log
+logs/
 !**/src/main/**/target/
 !**/src/test/**/target/
 

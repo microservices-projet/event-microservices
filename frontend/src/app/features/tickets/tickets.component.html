@@ -1,0 +1,56 @@
+<div class="ija-page">
+  <h1 class="ija-page__title">Tickets</h1>
+
+  <div *ngIf="!isAdmin" class="detail-error">
+    Acces reserve a l'administrateur.
+  </div>
+
+  <ng-container *ngIf="isAdmin">
+    <div class="filter-bar">
+      <button class="btn-ija btn-ija--sm" [class.btn-ija--primary]="!filterStatus" (click)="filterStatus=''">Tous</button>
+      <button class="btn-ija btn-ija--sm" [class.btn-ija--primary]="filterStatus==='DISPONIBLE'" (click)="filterStatus='DISPONIBLE'">Disponible</button>
+      <button class="btn-ija btn-ija--sm" [class.btn-ija--primary]="filterStatus==='VENDU'" (click)="filterStatus='VENDU'">Vendu</button>
+      <button class="btn-ija btn-ija--sm" [class.btn-ija--primary]="filterStatus==='ANNULE'" (click)="filterStatus='ANNULE'">Annule</button>
+    </div>
+
+    <div class="list-loading" *ngIf="loading">
+      <div class="spinner"></div>
+      <p>Chargement...</p>
+    </div>
+
+    <div class="list-empty" *ngIf="!loading && filteredTickets.length === 0">
+      <p>Aucun ticket trouve</p>
+    </div>
+
+    <div class="tickets-grid" *ngIf="!loading && filteredTickets.length > 0">
+      <div *ngFor="let ticket of filteredTickets" class="ticket-card ija-card">
+        <div class="ticket-card__header">
+          <h3 class="ticket-card__title">{{ ticket.eventTitle || 'Evenement #' + ticket.eventId }}</h3>
+          <span class="ija-badge" [ngClass]="statusClass(ticket.statut)">{{ ticket.statut }}</span>
+        </div>
+        <div class="ticket-card__body">
+          <div class="ticket-card__row">
+            <span class="ticket-card__label">Client</span>
+            <span>{{ ticket.nomClient }}</span>
+          </div>
+          <div class="ticket-card__row">
+            <span class="ticket-card__label">Email</span>
+            <span>{{ ticket.emailClient }}</span>
+          </div>
+          <div class="ticket-card__row">
+            <span class="ticket-card__label">Prix</span>
+            <span class="ticket-card__price">{{ ticket.prix }} TND</span>
+          </div>
+          <div class="ticket-card__row">
+            <span class="ticket-card__label">Type</span>
+            <span class="ija-badge" [ngClass]="typeClass(ticket.typeTicket)">{{ ticket.typeTicket }}</span>
+          </div>
+          <div class="ticket-card__row">
+            <span class="ticket-card__label">Date</span>
+            <span>{{ ticket.dateCreation | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

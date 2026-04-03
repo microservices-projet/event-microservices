@@ -1,0 +1,456 @@
+/* ===== Semantic light theme + legacy --ija-* (bordeaux accent) ===== */
+:root {
+  /* Semantic (source of truth) */
+  --color-page-bg: #f8fafc;
+  --color-page-gradient-end: #f0f4f8;
+  --color-surface: #f1f5f9;
+  --color-surface-raised: #ffffff;
+  --color-text: #0f172a;
+  --color-text-muted: #64748b;
+  --color-border: #e2e8f0;
+  --color-border-strong: #cbd5e1;
+  /* Bordeaux / burgundy primary */
+  --color-primary: #722f37;
+  --color-primary-hover: #5c262d;
+  --color-primary-soft: rgba(114, 47, 55, 0.1);
+  --color-primary-focus-ring: rgba(114, 47, 55, 0.22);
+  --color-on-primary: #ffffff;
+
+  /* Legacy app tokens → map to semantic */
+  --ija-bg: var(--color-page-bg);
+  --ija-bg-card: var(--color-surface-raised);
+  --ija-surface: var(--color-surface);
+  --ija-primary: var(--color-primary);
+  --ija-primary-hover: var(--color-primary-hover);
+  --ija-text: var(--color-text);
+  --ija-text-muted: var(--color-text-muted);
+  --ija-border: var(--color-border);
+  --ija-radius: 12px;
+  --ija-success: #15803d;
+  --ija-danger: #b91c1c;
+  --ija-warning: #b45309;
+  --ija-info: #1d4ed8;
+  --ija-font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+
+  /* Bootstrap 5 alignment (loaded before this file) */
+  --bs-body-bg: var(--color-page-bg);
+  --bs-body-color: var(--color-text);
+  --bs-secondary-color: var(--color-text-muted);
+  --bs-tertiary-color: #94a3b8;
+  --bs-border-color: var(--color-border);
+  --bs-link-color: var(--color-primary);
+  --bs-link-hover-color: var(--color-primary-hover);
+  --bs-emphasis-color: var(--color-text);
+  --bs-primary: var(--color-primary);
+  --bs-primary-rgb: 114, 47, 55;
+
+  /* Motion (overridable by styles-motion.css) */
+  --motion-fast: 0.15s;
+  --motion-base: 0.22s;
+  --motion-slow: 0.4s;
+  --motion-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-ease-in-out: cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: var(--color-page-bg);
+  background-image: linear-gradient(
+    165deg,
+    #fdf8f9 0%,
+    #f5eef2 28%,
+    var(--color-page-gradient-end) 58%,
+    #f8fafc 100%
+  );
+  background-attachment: fixed;
+  color: var(--ija-text);
+  font-family: var(--ija-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Angular root host */
+app-comp {
+  display: block;
+  min-height: 100vh;
+  background: transparent;
+  color: var(--ija-text);
+}
+
+a {
+  color: var(--ija-text);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+a:hover {
+  color: var(--ija-primary);
+}
+
+/* ===== Form Controls ===== */
+input, textarea, select {
+  font-family: var(--ija-font-sans);
+  font-size: 0.95rem;
+}
+
+/* If Bootstrap form classes are used alongside the app */
+.form-control,
+.form-select {
+  background-color: var(--ija-surface);
+  color: var(--ija-text);
+  border-color: var(--ija-border);
+}
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--ija-surface);
+  color: var(--ija-text);
+  border-color: var(--ija-primary);
+  box-shadow: 0 0 0 0.2rem var(--color-primary-focus-ring);
+}
+.form-control::placeholder {
+  color: var(--ija-text-muted);
+}
+
+.ija-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: var(--ija-radius);
+  border: 1px solid var(--ija-border);
+  background: var(--ija-surface);
+  color: var(--ija-text);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+}
+.ija-input:focus {
+  border-color: var(--ija-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-soft);
+}
+.ija-input::placeholder {
+  color: var(--ija-text-muted);
+}
+
+input.ng-touched.ng-valid,
+textarea.ng-touched.ng-valid,
+select.ng-touched.ng-valid {
+  border-color: var(--ija-success);
+}
+input.ng-touched.ng-invalid,
+textarea.ng-touched.ng-invalid,
+select.ng-touched.ng-invalid {
+  border-color: var(--ija-danger);
+}
+
+/* ===== Buttons ===== */
+.btn-ija {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.5rem;
+  border-radius: var(--ija-radius);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--ija-font-sans);
+  text-decoration: none;
+}
+.btn-ija:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-ija--primary {
+  background: var(--ija-primary);
+  color: var(--color-on-primary);
+  border-color: var(--ija-primary);
+}
+.btn-ija--primary:hover:not(:disabled) {
+  background: var(--ija-primary-hover);
+  border-color: var(--ija-primary-hover);
+  color: var(--color-on-primary);
+}
+
+.btn-ija--outline {
+  background: transparent;
+  color: var(--ija-primary);
+  border-color: var(--ija-primary);
+}
+.btn-ija--outline:hover:not(:disabled) {
+  background: var(--ija-primary);
+  color: #fff;
+}
+
+.btn-ija--ghost {
+  background: transparent;
+  color: var(--ija-text-muted);
+  border-color: var(--ija-border);
+}
+.btn-ija--ghost:hover:not(:disabled) {
+  color: var(--ija-text);
+  border-color: var(--ija-text-muted);
+}
+
+.btn-ija--danger {
+  background: var(--ija-danger);
+  color: #fff;
+  border-color: var(--ija-danger);
+}
+.btn-ija--danger:hover:not(:disabled) {
+  background: #b91c1c;
+  border-color: #b91c1c;
+}
+
+.btn-ija--secondary {
+  background: var(--ija-surface);
+  color: var(--ija-text);
+  border-color: var(--ija-border);
+}
+.btn-ija--secondary:hover:not(:disabled) {
+  background: var(--ija-bg-card);
+  border-color: var(--ija-primary);
+  color: var(--ija-text);
+}
+
+.btn-ija--sm {
+  padding: 0.4rem 1rem;
+  font-size: 0.85rem;
+}
+
+.btn-ija--lg {
+  padding: 0.85rem 2rem;
+  font-size: 1.05rem;
+}
+
+/* ===== Layout Utilities ===== */
+.ija-page {
+  padding: 2rem 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.ija-page__title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: var(--ija-text);
+}
+
+.ija-page__subtitle {
+  font-size: 1rem;
+  color: var(--ija-text-muted);
+  margin-bottom: 2rem;
+}
+
+/* ===== Card ===== */
+.ija-card {
+  background: var(--ija-bg-card);
+  border: 1px solid var(--ija-border);
+  border-radius: var(--ija-radius);
+  overflow: hidden;
+  transition: transform var(--motion-base, 0.22s) ease, box-shadow var(--motion-base, 0.22s) ease;
+}
+.ija-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+}
+
+.ija-card--interactive {
+  cursor: default;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+a.ija-card--interactive:hover {
+  border-color: color-mix(in srgb, var(--ija-primary) 45%, var(--ija-border));
+}
+
+.ija-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0 0 1.25rem;
+  padding: 0.25rem;
+  background: var(--ija-surface);
+  border-radius: var(--ija-radius);
+  border: 1px solid var(--ija-border);
+}
+
+.ija-tabs__btn {
+  border: none;
+  background: transparent;
+  color: var(--ija-text-muted);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.55rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+  font-family: var(--ija-font-sans);
+}
+
+.ija-tabs__btn:hover {
+  color: var(--ija-text);
+  background: rgba(15, 23, 42, 0.05);
+}
+
+.ija-tabs__btn.active {
+  color: var(--color-on-primary);
+  background: var(--ija-primary);
+}
+
+.ija-tab-panel {
+  animation: fadeIn 0.25s ease;
+}
+
+.ija-text-muted {
+  color: var(--ija-text-muted);
+}
+
+.ija-text-sm {
+  font-size: 0.82rem;
+}
+
+/* ===== Badge ===== */
+.ija-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.ija-badge--success {
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--ija-success);
+}
+.ija-badge--danger {
+  background: rgba(220, 38, 38, 0.15);
+  color: var(--ija-danger);
+}
+.ija-badge--warning {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--ija-warning);
+}
+.ija-badge--info {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--ija-info);
+}
+.ija-badge--muted {
+  background: rgba(163, 163, 163, 0.15);
+  color: var(--ija-text-muted);
+}
+.ija-badge--primary {
+  background: var(--color-primary-soft);
+  color: var(--ija-primary);
+}
+
+/* ===== Grid ===== */
+.ija-grid {
+  display: grid;
+  gap: 1.25rem;
+}
+.ija-grid--2 { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+.ija-grid--3 { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+.ija-grid--4 { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.ija-grid--cities { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+
+/* ===== Form Group ===== */
+.ija-form-group {
+  margin-bottom: 1.25rem;
+}
+.ija-form-group label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--ija-text-muted);
+}
+.ija-form-group .ija-error {
+  margin-top: 0.3rem;
+  font-size: 0.8rem;
+  color: var(--ija-danger);
+}
+
+/* ===== Section ===== */
+.ija-section {
+  margin-bottom: 3rem;
+}
+.ija-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+.ija-section__title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--ija-text);
+}
+.ija-section__link {
+  font-size: 0.9rem;
+  color: var(--ija-primary);
+  font-weight: 500;
+}
+
+/* ===== Divider ===== */
+.ija-divider {
+  border: none;
+  border-top: 1px solid var(--ija-border);
+  margin: 2rem 0;
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--ija-surface);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ija-text-muted);
+}
+
+/* Toast host (class set on app-toast-stack) */
+.app-toast-host {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1080;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-end;
+  pointer-events: none;
+  max-width: min(420px, calc(100vw - 2rem));
+}
+
+body.admin-app-mode .app-toast-host {
+  top: 7rem;
+}
+
+/* ===== Animations ===== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.ija-fade-in {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

@@ -1,0 +1,96 @@
+.filter-bar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+.filter-bar .ija-input {
+  min-width: 170px;
+  background: var(--ija-bg-card);
+  color: var(--ija-text);
+  border-color: var(--ija-border);
+}
+.list-loading {
+  text-align: center;
+  padding: 2rem 0;
+}
+.spinner {
+  width: 34px;
+  height: 34px;
+  border: 3px solid var(--ija-border);
+  border-top-color: var(--ija-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto;
+}
+.table-wrap {
+  overflow: auto;
+}
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--ija-bg-card);
+  color: var(--ija-text);
+  border: 1px solid var(--ija-border);
+  border-radius: var(--ija-radius);
+  overflow: hidden;
+}
+.admin-table th {
+  background: var(--ija-surface);
+  color: var(--ija-text);
+  border-bottom: 1px solid var(--ija-border);
+  padding: 0.55rem;
+  text-align: left;
+}
+.admin-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: background var(--motion-fast, 0.15s) ease, color 0.15s ease;
+}
+.admin-table th.sortable:hover {
+  background: color-mix(in srgb, var(--ija-primary) 8%, var(--ija-surface));
+}
+.admin-table th .sort-ind {
+  display: inline-block;
+  margin-left: 0.25rem;
+  font-size: 0.65rem;
+  color: var(--ija-primary);
+  min-width: 0.75rem;
+}
+.admin-table td {
+  color: var(--ija-text);
+  border-bottom: 1px solid var(--ija-border);
+  padding: 0.55rem;
+  text-align: left;
+}
+.admin-table__row {
+  cursor: pointer;
+  transition: background var(--motion-fast, 0.15s) ease;
+}
+.admin-table tbody tr.admin-table__row:hover {
+  background: var(--color-primary-soft);
+}
+.admin-table__row--expanded {
+  background: color-mix(in srgb, var(--ija-primary) 6%, var(--ija-bg-card)) !important;
+}
+.admin-table__detail td {
+  padding: 0;
+  border-bottom: 1px solid var(--ija-border);
+  background: var(--ija-surface);
+}
+.admin-table__detail-inner {
+  padding: 0.85rem 1rem;
+}
+.admin-table__detail-inner p {
+  margin: 0 0 0.35rem;
+}
+.actions {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

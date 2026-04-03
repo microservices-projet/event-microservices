@@ -1,0 +1,198 @@
+name: event-web-app
+
+services:
+
+  mysql:
+    image: mysql:8.0
+    container_name: event-mysql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: event-db
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - event-network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: event-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - event-network
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.0
+    container_name: event-zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    ports:
+      - "2181:2181"
+    networks:
+      - event-network
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.0
+    container_name: event-kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"   # 👈 IMPORTANT (missing before)
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+
+      # ✅ BEST CONFIG (Docker + host compatible)
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_INTERNAL://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://kafka:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
+
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+
+    healthcheck:
+      test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "localhost:9092"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 45s
+    networks:
+      - event-network
+
+  # Host 8095 — analytics-streams-service API uses host port 8086
+  akhq:
+    image: tchiotludo/akhq:0.25.0
+    container_name: event-akhq
+    ports:
+      - "8095:8080"
+    environment:
+      AKHQ_CONFIGURATION: |
+        akhq:
+          connections:
+            local-kafka:
+              properties:
+                bootstrap.servers: "kafka:29092"
+    depends_on:
+      kafka:
+        condition: service_healthy
+    networks:
+      - event-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: event-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - event-network
+
+  mongodb:
+    image: mongo:7.0
+    container_name: event-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 8
+      start_period: 30s
+    networks:
+      - event-network
+
+  keycloak-db:
+    image: postgres:16
+    container_name: event-keycloak-db
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
+    ports:
+      - "5433:5432"
+    volumes:
+      - keycloak_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U keycloak -d keycloak"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - event-network
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:25.0
+    container_name: event-keycloak
+    command: ["start-dev", "--import-realm"]
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-db:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloak
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8180:8080"
+    volumes:
+      # Pre-baked realm event-app (clients: event-frontend, gateway, event-backend) — see infra/keycloak/realm-export/
+      - ./infra/keycloak/realm-export:/opt/keycloak/data/import:ro
+    depends_on:
+      keycloak-db:
+        condition: service_healthy
+    networks:
+      - event-network
+
+  payment-service:
+    profiles: ["apps"]
+    build:
+      context: ./microservices/payment-service
+      dockerfile: Dockerfile
+    container_name: event-payment-service
+    ports:
+      - "8091:8091"
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      SPRING_CONFIG_IMPORT: optional:configserver:http://config-server:8888
+      SPRING_CLOUD_CONFIG_ENABLED: "false"
+      EUREKA_CLIENT_ENABLED: "false"
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/event-db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ""
+    depends_on:
+      kafka:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+    networks:
+      - event-network
+
+volumes:
+  mysql_data:
+  mongo_data:
+  keycloak_db_data:
+
+networks:
+  event-network:
+    driver: bridge

@@ -1,0 +1,68 @@
+<div class="admin-workspace">
+  <h1 class="ija-page__title">Utilisateurs</h1>
+  <form class="filter-bar" (ngSubmit)="onApply()">
+    <input class="ija-input" name="query" [(ngModel)]="query" placeholder="Recherche username / email / id" />
+    <select class="ija-input" name="role" [(ngModel)]="role">
+      <option value="">Tous les rôles</option><option>USER</option><option>ADMIN</option><option>MODERATOR</option>
+    </select>
+    <select class="ija-input" name="status" [(ngModel)]="status">
+      <option value="">Tous les statuts</option><option>ACTIVE</option><option>SUSPENDED</option><option>DISABLED</option>
+    </select>
+    <button type="submit" class="btn-ija btn-ija--primary" [disabled]="loading">Appliquer</button>
+    <button type="button" class="btn-ija btn-ija--ghost" [disabled]="loading" (click)="clearFilters()">Effacer</button>
+  </form>
+  <div *ngIf="loading" class="list-loading"><div class="spinner"></div></div>
+  <div class="table-wrap" *ngIf="!loading">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th class="sortable" scope="col" (click)="toggleSort('id')">
+            ID <span class="sort-ind">{{ sortIndicator('id') }}</span>
+          </th>
+          <th class="sortable" scope="col" (click)="toggleSort('username')">
+            Username <span class="sort-ind">{{ sortIndicator('username') }}</span>
+          </th>
+          <th class="sortable" scope="col" (click)="toggleSort('email')">
+            Email <span class="sort-ind">{{ sortIndicator('email') }}</span>
+          </th>
+          <th class="sortable" scope="col" (click)="toggleSort('role')">
+            Rôle <span class="sort-ind">{{ sortIndicator('role') }}</span>
+          </th>
+          <th class="sortable" scope="col" (click)="toggleSort('status')">
+            Statut <span class="sort-ind">{{ sortIndicator('status') }}</span>
+          </th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let u of sortedUsers">
+          <tr
+            class="admin-table__row"
+            [class.admin-table__row--expanded]="expandedUserId === u.id"
+            (click)="toggleExpand(u)"
+          >
+            <td>{{ u.id }}</td>
+            <td>{{ u.username }}</td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.role }}</td>
+            <td>{{ u.status }}</td>
+            <td class="actions" (click)="$event.stopPropagation()">
+              <button type="button" class="btn-ija btn-ija--sm" (click)="setRole(u, 'USER')">USER</button>
+              <button type="button" class="btn-ija btn-ija--sm" (click)="setRole(u, 'ADMIN')">ADMIN</button>
+              <button type="button" class="btn-ija btn-ija--sm" (click)="setStatus(u, 'ACTIVE')">ACT</button>
+              <button type="button" class="btn-ija btn-ija--sm" (click)="setStatus(u, 'SUSPENDED')">SUSP</button>
+            </td>
+          </tr>
+          <tr *ngIf="expandedUserId === u.id" class="admin-table__detail" @detailExpand>
+            <td colspan="6">
+              <div class="admin-table__detail-inner">
+                <p><strong>Créé le</strong> {{ u.createdAt | date : 'medium' }}</p>
+                <p class="ija-text-muted ija-text-sm">Cliquez à nouveau sur la ligne pour replier.</p>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</div>

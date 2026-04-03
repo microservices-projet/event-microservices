@@ -1,0 +1,47 @@
+.list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.list-header__actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.list-search {
+  margin-bottom: 2rem;
+  max-width: 500px;
+}
+
+.list-loading {
+  text-align: center;
+  padding: 3rem 0;
+  color: var(--ija-text-muted);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--ija-border);
+  border-top-color: var(--ija-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+.list-empty {
+  text-align: center;
+  padding: 4rem 0;
+}
+
+.list-empty__text {
+  font-size: 1.1rem;
+  color: var(--ija-text-muted);
+  margin-bottom: 1rem;
+}

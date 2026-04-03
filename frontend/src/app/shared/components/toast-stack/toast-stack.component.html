@@ -1,0 +1,26 @@
+<ng-container *ngIf="toasts$ | async as list">
+  <div
+    *ngFor="let t of list; trackBy: trackById"
+    class="app-toast"
+    [@toastEnter]
+    [class.app-toast--success]="t.kind === 'success'"
+    [class.app-toast--warning]="t.kind === 'warning'"
+    [class.app-toast--danger]="t.kind === 'danger'"
+    [class.app-toast--info]="t.kind === 'info'"
+    role="status"
+  >
+    <button type="button" class="app-toast__close" (click)="dismiss(t.id)" aria-label="Fermer">×</button>
+    <div class="app-toast__body">
+      <strong *ngIf="t.title" class="app-toast__title">{{ t.title }}</strong>
+      <p class="app-toast__msg">{{ t.message }}</p>
+      <button *ngIf="t.actionLabel" type="button" class="app-toast__action" (click)="action(t)">
+        {{ t.actionLabel }}
+      </button>
+    </div>
+    <div
+      *ngIf="t.durationMs > 0"
+      class="app-toast__progress"
+      [style.animationDuration.ms]="t.durationMs"
+    ></div>
+  </div>
+</ng-container>

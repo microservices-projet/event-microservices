@@ -1,0 +1,48 @@
+<header class="ija-header">
+  <div class="ija-header__inner">
+    <a routerLink="/" class="ija-header__logo">EventHub</a>
+
+    <button class="ija-header__toggle" (click)="toggleMenu()" [class.open]="menuOpen"
+            aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="ija-header__nav" [class.ija-header__nav--open]="menuOpen">
+      <a routerLink="/home" routerLinkActive="active" class="ija-header__link" (click)="menuOpen=false">Accueil</a>
+      <a routerLink="/events" routerLinkActive="active" class="ija-header__link" (click)="menuOpen=false">Événements</a>
+      <a routerLink="/reservations" routerLinkActive="active" class="ija-header__link" (click)="menuOpen=false">Reservations</a>
+      <a *ngIf="isAdmin || isOrganizer" routerLink="/tickets" routerLinkActive="active" class="ija-header__link" (click)="menuOpen=false">Tickets</a>
+      <a *ngIf="isAdmin" routerLink="/admin/dashboard" routerLinkActive="active" class="ija-header__link" (click)="menuOpen=false">Admin</a>
+      <a routerLink="/feedbacks" routerLinkActive="active" class="ija-header__link" (click)="menuOpen=false">Feedbacks</a>
+      <a *ngIf="user" routerLink="/reclamations" routerLinkActive="active" class="ija-header__link" (click)="menuOpen=false">Reclamations</a>
+
+      <div class="ija-header__mobile-actions">
+        <ng-container *ngIf="user; else mobileLoginTpl">
+          <span class="ija-header__user">{{ user.username }}</span>
+          <a routerLink="/profil" class="btn-ija btn-ija--ghost btn-ija--sm" (click)="menuOpen=false">Profil</a>
+          <button class="btn-ija btn-ija--outline btn-ija--sm" (click)="logout()">Deconnexion</button>
+        </ng-container>
+        <ng-template #mobileLoginTpl>
+          <a routerLink="/auth/login" class="btn-ija btn-ija--outline btn-ija--sm" (click)="menuOpen=false">Connexion</a>
+          <a routerLink="/auth/register" class="btn-ija btn-ija--primary btn-ija--sm" (click)="menuOpen=false">Inscription</a>
+        </ng-template>
+      </div>
+    </nav>
+
+    <div class="ija-header__actions">
+      <ng-container *ngIf="user; else loginTpl">
+        <span class="ija-header__user">{{ user.username }}</span>
+        <a routerLink="/profil" class="btn-ija btn-ija--ghost btn-ija--sm" (click)="menuOpen=false">Profil</a>
+        <button class="btn-ija btn-ija--outline btn-ija--sm" (click)="logout()">Deconnexion</button>
+      </ng-container>
+      <ng-template #loginTpl>
+        <a routerLink="/auth/login" class="btn-ija btn-ija--outline btn-ija--sm" (click)="menuOpen=false">Connexion</a>
+        <a routerLink="/auth/register" class="btn-ija btn-ija--primary btn-ija--sm" (click)="menuOpen=false">Inscription</a>
+      </ng-template>
+    </div>
+  </div>
+
+  <div class="ija-header__calendar" *ngIf="showCalendar">
+    <app-calendar-strip [compact]="true"></app-calendar-strip>
+  </div>
+</header>

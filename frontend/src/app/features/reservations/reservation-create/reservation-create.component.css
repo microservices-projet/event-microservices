@@ -1,0 +1,9 @@
+.res-saga-hint { max-width: 640px; font-size: 0.88rem; line-height: 1.45; margin: -0.25rem 0 1.25rem; }
+.res-form-card { padding: 2rem; max-width: 550px; }
+.input-with-btn { display: flex; gap: 0.5rem; }
+.input-with-btn .ija-input { flex: 1; }
+.availability-box { background: var(--ija-surface); border: 1px solid var(--ija-border); border-radius: var(--ija-radius); padding: 1rem; margin-bottom: 1.25rem; }
+.availability-row { display: flex; justify-content: space-between; padding: 0.35rem 0; font-size: 0.9rem; color: var(--ija-text-muted); }
+.availability-row--highlight { color: var(--ija-success); font-weight: 700; font-size: 1rem; }
+.res-form-error { background: rgba(220,38,38,0.1); border: 1px solid var(--ija-danger); border-radius: var(--ija-radius); padding: 0.75rem 1rem; color: var(--ija-danger); font-size: 0.9rem; margin-bottom: 1rem; }
+.res-form-actions { display: flex; gap: 1rem; margin-top: 1rem; }

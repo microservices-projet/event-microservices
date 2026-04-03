@@ -1,0 +1,60 @@
+<div class="ija-page">
+  <h1 class="ija-page__title">Nouvelle reservation</h1>
+  <p class="ija-text-muted res-saga-hint" *ngIf="isAdmin">
+    Flux orchestré par le <strong>saga-orchestrator</strong> : création de la réservation (Mongo + Kafka),
+    émission du billet, puis liaison — avec compensation automatique en cas d’échec.
+  </p>
+
+  <ng-container *ngIf="isAdmin; else notAllowedTpl">
+    <div class="res-form-card ija-card">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="ija-form-group">
+        <label for="eventId">ID de l'evenement</label>
+        <div class="input-with-btn">
+          <input id="eventId" type="number" class="ija-input" formControlName="eventId" placeholder="Ex: 1" min="1">
+          <button type="button" class="btn-ija btn-ija--outline btn-ija--sm"
+                  (click)="checkAvailability()" [disabled]="!form.get('eventId')?.value">
+            {{ checkingAvailability ? '...' : 'Verifier' }}
+          </button>
+        </div>
+      </div>
+
+      <div class="availability-box" *ngIf="availability">
+        <div class="availability-row">
+          <span>Places totales</span>
+          <span>{{ availability.totalPlaces }}</span>
+        </div>
+        <div class="availability-row">
+          <span>Reservees</span>
+          <span>{{ availability.reservedPlaces }}</span>
+        </div>
+        <div class="availability-row availability-row--highlight">
+          <span>Disponibles</span>
+          <span>{{ availability.availablePlaces }}</span>
+        </div>
+      </div>
+
+      <div class="ija-form-group">
+        <label for="numberOfPlaces">Nombre de places</label>
+        <input id="numberOfPlaces" type="number" class="ija-input" formControlName="numberOfPlaces" min="1">
+      </div>
+
+      <div class="res-form-error" *ngIf="error">{{ error }}</div>
+
+      <div class="res-form-actions">
+        <button type="submit" class="btn-ija btn-ija--primary btn-ija--lg" [disabled]="form.invalid || loading">
+          {{ loading ? 'Orchestration...' : 'Reserver (saga)' }}
+        </button>
+        <a routerLink="/reservations" class="btn-ija btn-ija--ghost btn-ija--lg">Annuler</a>
+      </div>
+      </form>
+    </div>
+  </ng-container>
+
+  <ng-template #notAllowedTpl>
+    <div class="res-form-card ija-card">
+      <div class="ija-text-muted">Action reservee a l'administrateur.</div>
+      <a routerLink="/events" class="btn-ija btn-ija--outline" style="margin-top:1rem;">Retour aux evenements</a>
+    </div>
+  </ng-template>
+</div>

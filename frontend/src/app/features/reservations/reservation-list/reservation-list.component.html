@@ -1,0 +1,48 @@
+<div class="ija-page">
+  <div class="list-header">
+    <h1 class="ija-page__title">{{ isAdmin ? 'Reservations (admin)' : 'Mes reservations' }}</h1>
+    <a *ngIf="isAdmin" routerLink="./create" class="btn-ija btn-ija--primary">+ Nouvelle reservation</a>
+  </div>
+
+  <div class="filter-bar">
+    <button class="btn-ija btn-ija--sm" [class.btn-ija--primary]="!filterStatus" (click)="filterStatus=''">Toutes</button>
+    <button class="btn-ija btn-ija--sm" [class.btn-ija--primary]="filterStatus==='PENDING'" (click)="filterStatus='PENDING'">En attente</button>
+    <button class="btn-ija btn-ija--sm" [class.btn-ija--primary]="filterStatus==='CONFIRMED'" (click)="filterStatus='CONFIRMED'">Confirmee</button>
+    <button class="btn-ija btn-ija--sm" [class.btn-ija--primary]="filterStatus==='CANCELLED'" (click)="filterStatus='CANCELLED'">Annulee</button>
+    <button class="btn-ija btn-ija--sm" [class.btn-ija--primary]="filterStatus==='FAILED'" (click)="filterStatus='FAILED'">Paiement echoue</button>
+  </div>
+
+  <div class="list-loading" *ngIf="loading"><div class="spinner"></div></div>
+
+  <div class="list-empty" *ngIf="!loading && filteredReservations.length === 0">
+    <p>Aucune reservation</p>
+    <a *ngIf="isAdmin" routerLink="./create" class="btn-ija btn-ija--outline">Reserver maintenant</a>
+  </div>
+
+  <div class="reservation-grid" *ngIf="!loading && filteredReservations.length > 0">
+    <a *ngFor="let res of filteredReservations" [routerLink]="['./', res.id]" class="res-card ija-card ija-card--interactive">
+      <div class="res-card__header">
+        <h3 class="res-card__title">{{ res.eventTitle || 'Evenement #' + res.eventId }}</h3>
+        <span class="ija-badge" [ngClass]="statusClass(res.status)">{{ res.status }}</span>
+      </div>
+      <div class="res-card__body">
+        <div class="res-card__row">
+          <span class="res-card__label">Places</span>
+          <span>{{ res.numberOfPlaces }}</span>
+        </div>
+        <div class="res-card__row">
+          <span class="res-card__label">Total</span>
+          <span class="res-card__price">{{ res.totalPrice }} TND</span>
+        </div>
+        <div class="res-card__row">
+          <span class="res-card__label">Paiement</span>
+          <span class="ija-badge" [ngClass]="paymentClass(res.paymentStatus)">{{ res.paymentStatus }}</span>
+        </div>
+        <div class="res-card__row">
+          <span class="res-card__label">Date</span>
+          <span>{{ res.reservationDate | date:'dd/MM/yyyy' }}</span>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>

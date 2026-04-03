@@ -1,0 +1,135 @@
+<div class="ija-page res-detail">
+  <div class="detail-loading" *ngIf="loading"><div class="spinner"></div></div>
+
+  <div *ngIf="!loading && reservation" class="res-detail__wrap">
+    <div class="res-detail__header">
+      <h1 class="ija-page__title">Reservation</h1>
+      <span class="ija-badge res-detail__id">{{ reservation.id | slice:0:12 }}...</span>
+    </div>
+
+    <p class="ija-error-text" *ngIf="actionError">{{ actionError }}</p>
+
+    <div class="res-detail__grid">
+      <div class="ija-card res-detail__card">
+        <div class="res-detail__card-inner">
+          <div class="res-detail__row">
+            <span class="res-detail__label">Evenement</span>
+            <a [routerLink]="['/events', reservation.eventId]" class="res-detail__link">{{ reservation.eventTitle || 'Evenement #' + reservation.eventId }}</a>
+          </div>
+          <div class="res-detail__row">
+            <span class="res-detail__label">Places</span>
+            <span>{{ reservation.numberOfPlaces }}</span>
+          </div>
+          <div class="res-detail__row">
+            <span class="res-detail__label">Prix total</span>
+            <span class="res-detail__price">{{ reservation.totalPrice }} TND</span>
+          </div>
+          <div class="res-detail__row">
+            <span class="res-detail__label">Statut reservation</span>
+            <span class="ija-badge" [ngClass]="statusClass(statusLabel)">{{ statusLabel }}</span>
+          </div>
+          <div class="res-detail__row">
+            <span class="res-detail__label">Paiement</span>
+            <span class="ija-badge" [ngClass]="paymentClass(reservation.paymentStatus)">{{ reservation.paymentStatus }}</span>
+          </div>
+          <div class="res-detail__row" *ngIf="reservation.ticketId != null">
+            <span class="res-detail__label">Billet (saga)</span>
+            <span>
+              #{{ reservation.ticketId }}
+              <a routerLink="/tickets" class="res-detail__link res-detail__link--inline">Mes billets</a>
+            </span>
+          </div>
+          <div class="res-detail__row" *ngIf="paymentSession">
+            <span class="res-detail__label">Session paiement</span>
+            <span>{{ paymentSession.sessionId }} ({{ paymentSession.status }})</span>
+          </div>
+          <ng-container *ngIf="paymentSession as ps">
+            <div class="res-detail__row" *ngIf="ps.amount != null">
+              <span class="res-detail__label">Montant session</span>
+              <span>{{ ps.amount }} {{ ps.currency || 'TND' }} — {{ ps.provider || '—' }}</span>
+            </div>
+          </ng-container>
+          <div class="res-detail__row">
+            <span class="res-detail__label">Date reservation</span>
+            <span>{{ reservation.reservationDate | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+          <div class="res-detail__row" *ngIf="reservation.cancellationReason">
+            <span class="res-detail__label">Raison annulation</span>
+            <span>{{ reservation.cancellationReason }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="res-detail__actions ija-card">
+        <h2 class="res-detail__actions-title">Actions</h2>
+
+        <div *ngIf="needsPaymentAck && paymentSession" class="res-detail__pay-verify">
+          <p class="res-detail__pay-verify-title">Vérification du paiement (simulation)</p>
+          <ol class="res-detail__pay-steps">
+            <li>
+              <strong>Vérifier</strong> — Comparez le montant de la session avec le total de la réservation.
+              <span *ngIf="paymentAmountMismatch" class="res-detail__pay-warn">
+                Écart détecté entre le montant session et le total affiché.
+              </span>
+            </li>
+            <li>
+              <strong>Confirmer</strong> — Cochez la case ci-dessous pour autoriser l’appel au prestataire simulé.
+            </li>
+          </ol>
+          <label class="res-detail__pay-check">
+            <input type="checkbox" [(ngModel)]="paymentVerifyAcknowledged" />
+            <span>Je confirme le montant, la devise et les détails de la session avant de poursuivre.</span>
+          </label>
+        </div>
+
+        <button *ngIf="canConfirm" type="button" class="btn-ija btn-ija--primary"
+                (click)="confirm()">
+          Confirmer (admin)
+        </button>
+        <button *ngIf="canResumePayment" type="button" class="btn-ija btn-ija--primary"
+                [disabled]="paymentActionsBlocked" (click)="resumePayment()">
+          Finaliser le paiement simulé
+        </button>
+        <button *ngIf="canRetryPayment" type="button" class="btn-ija btn-ija--primary"
+                [disabled]="paymentActionsBlocked" (click)="retryPayment()">
+          Reessayer le paiement
+        </button>
+        <button *ngIf="canResumePayment" type="button" class="btn-ija btn-ija--ghost"
+                [disabled]="paymentActionsBlocked" (click)="markPaymentFailed()">
+          Simuler un echec paiement
+        </button>
+        <button *ngIf="canCancel && !showCancelPanel" type="button" class="btn-ija btn-ija--danger"
+                (click)="openCancel()">
+          Annuler la reservation
+        </button>
+
+        <div *ngIf="showCancelPanel" class="res-detail__cancel-panel">
+          <label class="ija-form-group">
+            <span>Raison (optionnel)</span>
+            <textarea class="ija-input" rows="3" [(ngModel)]="cancelReason" placeholder="Expliquez brievement..."></textarea>
+          </label>
+          <div class="res-detail__cancel-btns">
+            <button type="button" class="btn-ija btn-ija--danger btn-ija--sm" (click)="submitCancel()">Confirmer l'annulation</button>
+            <button type="button" class="btn-ija btn-ija--ghost btn-ija--sm" (click)="closeCancel()">Retour</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="reservation.auditLog && reservation.auditLog.length > 0" class="ija-card res-detail__audit">
+      <h2 class="res-detail__actions-title">Historique</h2>
+      <div class="audit-timeline">
+        <div *ngFor="let entry of reservation.auditLog" class="audit-entry">
+          <span class="audit-dot"></span>
+          <div class="audit-content">
+            <span class="audit-action">{{ entry.action }}</span>
+            <span class="audit-detail">{{ entry.details }}</span>
+            <span class="audit-time">{{ entry.timestamp | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <a routerLink="/reservations" class="btn-ija btn-ija--ghost">&larr; Retour</a>
+  </div>
+</div>

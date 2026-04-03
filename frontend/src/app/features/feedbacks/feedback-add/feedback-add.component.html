@@ -1,0 +1,44 @@
+<div class="ija-page">
+  <h1 class="ija-page__title">Nouveau feedback</h1>
+
+  <div class="feedback-form-card ija-card">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="ija-form-group">
+        <label for="eventId">ID de l'evenement</label>
+        <input id="eventId" type="number" class="ija-input" formControlName="eventId" placeholder="Ex: 1" min="1">
+      </div>
+
+      <div class="ija-form-group">
+        <label>Note</label>
+        <div class="star-selector">
+          <span *ngFor="let i of [1,2,3,4,5]"
+                class="star-btn"
+                [class.star-btn--active]="i <= (hoverRating || selectedRating)"
+                (click)="setRating(i)"
+                (mouseenter)="hoverRating=i"
+                (mouseleave)="hoverRating=0">&#9733;</span>
+        </div>
+        <div class="ija-error" *ngIf="selectedRating === 0">Selectionnez une note</div>
+      </div>
+
+      <div class="ija-form-group">
+        <label for="comment">Commentaire</label>
+        <textarea id="comment" class="ija-input feedback-textarea" formControlName="comment"
+                  placeholder="Votre avis..." rows="4"></textarea>
+        <div class="ija-error" *ngIf="form.get('comment')?.touched && form.get('comment')?.invalid">
+          Minimum 5 caracteres requis
+        </div>
+      </div>
+
+      <div class="feedback-form-error" *ngIf="error">{{ error }}</div>
+
+      <div class="feedback-form-actions">
+        <button type="submit" class="btn-ija btn-ija--primary btn-ija--lg"
+                [disabled]="form.invalid || selectedRating === 0 || loading">
+          {{ loading ? 'Envoi...' : 'Envoyer le feedback' }}
+        </button>
+        <a routerLink="/feedbacks" class="btn-ija btn-ija--ghost btn-ija--lg">Annuler</a>
+      </div>
+    </form>
+  </div>
+</div>

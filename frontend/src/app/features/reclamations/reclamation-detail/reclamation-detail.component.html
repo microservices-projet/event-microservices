@@ -1,0 +1,53 @@
+<div class="ija-page">
+  <div class="detail-loading" *ngIf="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <div *ngIf="!loading && reclamation" class="detail-content">
+    <div class="detail-header">
+      <h1 class="ija-page__title">{{ reclamation.subject }}</h1>
+      <div class="detail-badges">
+        <span class="ija-badge" [ngClass]="statusClass(reclamation.status)">{{ reclamation.status }}</span>
+        <span class="ija-badge ija-badge--muted">{{ reclamation.type }}</span>
+        <span class="ija-badge ija-badge--muted">{{ reclamation.priority }}</span>
+      </div>
+    </div>
+
+    <div class="detail-grid">
+      <div class="detail-main ija-card">
+        <div class="detail-card-inner">
+          <h3>Description</h3>
+          <p class="detail-desc">{{ reclamation.description }}</p>
+
+          <div *ngIf="reclamation.response" class="detail-response">
+            <h3>Reponse</h3>
+            <p>{{ reclamation.response }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-sidebar ija-card">
+        <div class="detail-card-inner">
+          <div class="detail-info-row">
+            <span class="detail-label">Creee le</span>
+            <span>{{ reclamation.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+          <div class="detail-info-row" *ngIf="reclamation.resolvedAt">
+            <span class="detail-label">Resolue le</span>
+            <span>{{ reclamation.resolvedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+          <div class="detail-info-row" *ngIf="reclamation.eventTitle">
+            <span class="detail-label">Evenement</span>
+            <span>{{ reclamation.eventTitle }}</span>
+          </div>
+          <div class="detail-info-row" *ngIf="reclamation.username">
+            <span class="detail-label">Utilisateur</span>
+            <span>{{ reclamation.username }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <a routerLink="/reclamations" class="btn-ija btn-ija--ghost">&larr; Retour</a>
+  </div>
+</div>

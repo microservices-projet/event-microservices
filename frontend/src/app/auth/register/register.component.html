@@ -1,0 +1,42 @@
+<div class="auth-page">
+  <div class="auth-card ija-card">
+    <h1 class="auth-card__title">Inscription</h1>
+    <p class="auth-card__subtitle">Inscription locale ou via Keycloak (SSO)</p>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-card__form">
+      <div class="ija-form-group">
+        <label for="username">Nom d'utilisateur</label>
+        <input id="username" type="text" class="ija-input" formControlName="username" placeholder="Choisissez un nom d'utilisateur">
+      </div>
+
+      <div class="ija-form-group">
+        <label for="email">Email</label>
+        <input id="email" type="email" class="ija-input" formControlName="email" placeholder="votre@email.com">
+      </div>
+
+      <div class="ija-form-group">
+        <label for="password">Mot de passe</label>
+        <input id="password" type="password" class="ija-input" formControlName="password" placeholder="Minimum 4 caracteres">
+      </div>
+
+      <div class="auth-card__error" *ngIf="error">{{ error }}</div>
+
+      <button type="submit" class="btn-ija btn-ija--primary btn-ija--lg auth-card__submit"
+              [disabled]="form.invalid || loading || ssoLoading">
+        <span *ngIf="loading" class="spinner"></span>
+        {{ loading ? 'Creation...' : 'Creer un compte' }}
+      </button>
+
+      <button type="button" class="btn-ija btn-ija--secondary btn-ija--lg auth-card__submit"
+              [disabled]="loading || ssoLoading" (click)="onSsoRegister()">
+        <span *ngIf="ssoLoading" class="spinner"></span>
+        {{ ssoLoading ? 'Redirection...' : 'Continuer avec Keycloak' }}
+      </button>
+
+      <div class="auth-card__footer">
+        <span>Deja un compte ?</span>
+        <a routerLink="/auth/login" class="auth-card__link">Se connecter</a>
+      </div>
+    </form>
+  </div>
+</div>

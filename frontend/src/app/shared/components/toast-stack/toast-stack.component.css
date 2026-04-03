@@ -1,0 +1,105 @@
+.app-toast {
+  position: relative;
+  pointer-events: auto;
+  width: 100%;
+  max-width: 380px;
+  padding: 0.85rem 2.25rem 0.65rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--ija-border);
+  background: var(--ija-bg-card);
+  color: var(--ija-text);
+  box-shadow: 0 10px 40px rgba(15, 23, 42, 0.12);
+  overflow: hidden;
+}
+
+.app-toast--success {
+  border-color: color-mix(in srgb, var(--ija-success) 35%, var(--ija-border));
+}
+
+.app-toast--warning {
+  border-color: color-mix(in srgb, var(--ija-warning) 45%, var(--ija-border));
+}
+
+.app-toast--danger {
+  border-color: color-mix(in srgb, var(--ija-danger) 45%, var(--ija-border));
+}
+
+.app-toast--info {
+  border-color: color-mix(in srgb, var(--ija-info) 35%, var(--ija-border));
+}
+
+.app-toast__close {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.4rem;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ija-text-muted);
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background var(--motion-fast, 0.15s) ease, color 0.15s ease;
+}
+
+.app-toast__close:hover {
+  background: var(--ija-surface);
+  color: var(--ija-text);
+}
+
+.app-toast__body {
+  margin: 0;
+}
+
+.app-toast__title {
+  display: block;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ija-text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.app-toast__msg {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.app-toast__action {
+  margin-top: 0.5rem;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  background: var(--color-primary-soft);
+  color: var(--ija-primary);
+  cursor: pointer;
+}
+
+.app-toast__action:hover {
+  background: color-mix(in srgb, var(--ija-primary) 18%, transparent);
+}
+
+.app-toast__progress {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  background: linear-gradient(90deg, var(--ija-primary), color-mix(in srgb, var(--ija-primary) 60%, white));
+  transform-origin: left center;
+  animation: app-toast-progress linear forwards;
+}
+
+@keyframes app-toast-progress {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}

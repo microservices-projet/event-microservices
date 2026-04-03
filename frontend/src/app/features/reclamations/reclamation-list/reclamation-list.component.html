@@ -1,0 +1,39 @@
+<div class="ija-page">
+  <div class="list-header">
+    <h1 class="ija-page__title">Reclamations</h1>
+    <a routerLink="./create" class="btn-ija btn-ija--primary">+ Nouvelle reclamation</a>
+  </div>
+
+  <div class="filter-bar">
+    <button class="btn-ija btn-ija--sm" [class.btn-ija--primary]="!filterStatus" (click)="filterStatus=''">Tous</button>
+    <button class="btn-ija btn-ija--sm" [class.btn-ija--primary]="filterStatus==='OPEN'" (click)="filterStatus='OPEN'">Ouverte</button>
+    <button class="btn-ija btn-ija--sm" [class.btn-ija--primary]="filterStatus==='IN_PROGRESS'" (click)="filterStatus='IN_PROGRESS'">En cours</button>
+    <button class="btn-ija btn-ija--sm" [class.btn-ija--primary]="filterStatus==='RESOLVED'" (click)="filterStatus='RESOLVED'">Resolue</button>
+    <button class="btn-ija btn-ija--sm" [class.btn-ija--primary]="filterStatus==='CLOSED'" (click)="filterStatus='CLOSED'">Fermee</button>
+  </div>
+
+  <div class="list-loading" *ngIf="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <div class="list-empty" *ngIf="!loading && filteredReclamations.length === 0">
+    <p>Aucune reclamation</p>
+  </div>
+
+  <div class="reclamation-grid" *ngIf="!loading && filteredReclamations.length > 0">
+    <a *ngFor="let rec of filteredReclamations" [routerLink]="['./', rec.id]" class="rec-card ija-card ija-card--interactive">
+      <div class="rec-card__header">
+        <h3 class="rec-card__title">{{ rec.subject }}</h3>
+        <span class="ija-badge" [ngClass]="statusClass(rec.status)">{{ rec.status }}</span>
+      </div>
+      <div class="rec-card__body">
+        <p class="rec-card__desc">{{ rec.description.length > 100 ? (rec.description | slice:0:100) + '...' : rec.description }}</p>
+        <div class="rec-card__meta">
+          <span class="ija-badge" [ngClass]="priorityClass(rec.priority)">{{ rec.priority }}</span>
+          <span class="rec-card__type">{{ rec.type }}</span>
+          <span class="rec-card__date">{{ rec.createdAt | date:'dd/MM/yyyy' }}</span>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>

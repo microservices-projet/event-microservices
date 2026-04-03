@@ -1,0 +1,3 @@
+CREATE DATABASE IF NOT EXISTS `ticketdb`;
+CREATE DATABASE IF NOT EXISTS `reclamationdb`;
+

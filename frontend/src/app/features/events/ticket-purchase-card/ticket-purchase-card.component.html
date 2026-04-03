@@ -1,0 +1,55 @@
+<div class="purchase-card ija-card">
+  <form class="purchase-form" (ngSubmit)="onSubmit()">
+    <div class="purchase-info">
+      <div class="purchase-info__titles">
+        <div class="purchase-title">
+          Ticket pour
+          <span class="purchase-title__event" *ngIf="eventTitle; else defaultTitle">
+            {{ eventTitle }}
+          </span>
+          <ng-template #defaultTitle>l'evenement #{{ eventId }}</ng-template>
+        </div>
+        <div class="purchase-subtitle">
+          Prix unitaire : {{ unitPrice === 0 ? 'Gratuit' : (unitPrice + ' TND') }}
+        </div>
+      </div>
+      <div class="purchase-meta">
+        <span class="ija-badge ija-badge--muted" *ngIf="availablePlaces != null">
+          Disponible: {{ availablePlaces }}
+        </span>
+      </div>
+    </div>
+
+    <div class="ija-form-group">
+      <label for="nbPlace">Nombre de tickets / places</label>
+      <input
+        id="nbPlace"
+        type="number"
+        class="ija-input"
+        [(ngModel)]="nbPlace"
+        name="nbPlace"
+        min="1"
+        required
+        (ngModelChange)="recalcTotal()"
+      />
+      <div class="ija-hint" *ngIf="availabilityLoading">Calcul disponibilite...</div>
+    </div>
+
+    <div class="purchase-summary">
+      <span class="purchase-label">Total</span>
+      <span class="purchase-total">{{ totalPrice }} TND</span>
+    </div>
+
+    <div class="auth-card__error" *ngIf="error">{{ error }}</div>
+    <div class="auth-card__success" *ngIf="success">{{ success }}</div>
+
+    <button
+      type="submit"
+      class="btn-ija btn-ija--primary btn-ija--lg purchase-submit"
+      [disabled]="loading || nbPlace < 1"
+    >
+      {{ loading ? 'Traitement...' : 'Passer à la caisse' }}
+    </button>
+  </form>
+</div>
+

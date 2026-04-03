@@ -1,0 +1,26 @@
+<div class="admin-workspace">
+  <h1 class="ija-page__title">Admin Reclamations</h1>
+  <form class="filter-bar" (ngSubmit)="onApply()">
+    <input class="ija-input" name="userId" [(ngModel)]="userId" placeholder="userId" />
+    <input class="ija-input" name="eventId" [(ngModel)]="eventId" placeholder="eventId" />
+    <input class="ija-input" name="status" [(ngModel)]="status" placeholder="status" />
+    <input class="ija-input" name="type" [(ngModel)]="type" placeholder="type" />
+    <button type="submit" class="btn-ija btn-ija--primary" [disabled]="loading">Apply</button>
+    <button type="button" class="btn-ija btn-ija--ghost" [disabled]="loading" (click)="clearFilters()">Clear</button>
+  </form>
+  <div *ngIf="loading" class="list-loading"><div class="spinner"></div></div>
+  <div class="table-wrap" *ngIf="!loading">
+    <table class="admin-table">
+      <thead><tr><th>ID</th><th>User</th><th>Type</th><th>Status</th><th>Priority</th><th>Actions</th></tr></thead>
+      <tbody>
+        <tr *ngFor="let r of reclamations">
+          <td>{{ r.id }}</td><td>{{ r.userId }}</td><td>{{ r.type }}</td><td>{{ r.status }}</td><td>{{ r.priority }}</td>
+          <td class="actions">
+            <button class="btn-ija btn-ija--sm" (click)="assign(r)">Assign me</button>
+            <button class="btn-ija btn-ija--sm" (click)="resolve(r)">Resolve</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

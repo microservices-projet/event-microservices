@@ -1,0 +1,15 @@
+.filter-bar { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+.filter-bar .ija-input {
+  min-width: 150px;
+  background: var(--ija-bg-card);
+  color: var(--ija-text);
+  border-color: var(--ija-border);
+}
+.list-loading { text-align: center; padding: 2rem 0; }
+.spinner { width: 34px; height: 34px; border: 3px solid var(--ija-border); border-top-color: var(--ija-primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto; }
+.table-wrap { overflow: auto; }
+.admin-table { width: 100%; border-collapse: collapse; background: var(--ija-bg-card); color: var(--ija-text); border: 1px solid var(--ija-border); border-radius: var(--ija-radius); overflow: hidden; }
+.admin-table th { background: var(--ija-surface); color: var(--ija-text); border-bottom: 1px solid var(--ija-border); padding: 0.55rem; text-align: left; }
+.admin-table td { color: var(--ija-text); border-bottom: 1px solid var(--ija-border); padding: 0.55rem; text-align: left; }
+.admin-table tbody tr:hover { background: rgba(232, 93, 4, 0.08); }
+.actions { display: flex; gap: 0.35rem; }

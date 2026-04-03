@@ -1,0 +1,76 @@
+<div class="admin-workspace admin-dash">
+  <div class="admin-dash__head">
+    <h1 class="ija-page__title">Tableau de bord</h1>
+    <button type="button" class="btn-ija btn-ija--outline btn-ija--sm" (click)="refreshAll()">Rafraîchir</button>
+  </div>
+
+  <p class="admin-dash__intro ija-text-muted">
+    Vue agrégée (Config / Eureka) et métriques temps quasi réel via
+    <strong>analytics-streams-service</strong> (Kafka Streams). Les réservations distribuées peuvent transiter par le
+    <strong>saga-orchestrator</strong> (<code>POST /api/saga/reserve</code>).
+  </p>
+
+  <div *ngIf="loading" class="admin-grid admin-grid--metrics admin-kpi-skeletons" aria-busy="true">
+    <div *ngFor="let _ of kpiSkeletonSlots" class="ija-card skeleton-kpi motion-shimmer"></div>
+  </div>
+
+  <div *ngIf="!loading && summary" class="admin-grid admin-grid--metrics">
+    <div class="ija-card metric metric--users motion-card-lift motion-fade-up motion-stagger-1">
+      <div class="label">Utilisateurs</div><div class="value">{{ summary.usersCount }}</div>
+    </div>
+    <div class="ija-card metric metric--events motion-card-lift motion-fade-up motion-stagger-2">
+      <div class="label">Événements</div><div class="value">{{ summary.eventsCount }}</div>
+    </div>
+    <div class="ija-card metric metric--res motion-card-lift motion-fade-up motion-stagger-3">
+      <div class="label">Réservations</div><div class="value">{{ summary.reservationsCount }}</div>
+    </div>
+    <div class="ija-card metric metric--rev motion-card-lift motion-fade-up motion-stagger-4">
+      <div class="label">Revenu (payé)</div><div class="value">{{ summary.revenue | number:'1.0-0' }} TND</div>
+    </div>
+  </div>
+
+  <section class="admin-section ija-card" *ngIf="summary">
+    <h2 class="admin-section__title">Activite & statuts</h2>
+    <div class="status-chips">
+      <div class="status-chip" *ngFor="let kv of objectEntries(summary.reservationsByStatus)">
+        <span class="status-chip__k">Res. {{ kv[0] }}</span>
+        <span class="status-chip__v ija-badge ija-badge--warning">{{ kv[1] }}</span>
+      </div>
+      <div class="status-chip" *ngFor="let kv of objectEntries(summary.reclamationsByStatus)">
+        <span class="status-chip__k">Recl. {{ kv[0] }}</span>
+        <span class="status-chip__v" [ngClass]="kv[0] === 'OPEN' ? 'ija-badge ija-badge--danger' : 'ija-badge ija-badge--muted'">{{ kv[1] }}</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="admin-section">
+    <h2 class="admin-section__title">Analytics streams</h2>
+    <div *ngIf="analyticsLoading" class="list-loading"><div class="spinner"></div></div>
+    <p *ngIf="analyticsError" class="ija-text-muted">Service analytics indisponible (demarrez analytics-streams-service et la gateway).</p>
+
+    <div *ngIf="!analyticsLoading && analytics" class="analytics-grid">
+      <div class="ija-card analytics-card motion-card-lift motion-fade-up">
+        <h3>Top titres d’événements (créés)</h3>
+        <ul class="analytics-list">
+          <li *ngFor="let t of topTitles()"><span>{{ t.title }}</span><strong>{{ t.count }}</strong></li>
+          <li *ngIf="!topTitles().length" class="ija-text-muted">Pas encore de donnees.</li>
+        </ul>
+      </div>
+      <div class="ija-card analytics-card motion-card-lift motion-fade-up motion-stagger-1">
+        <h3>Réservations / minute (série)</h3>
+        <p class="analytics-hint ija-text-muted">Derniers échantillons agrégés (fenêtres streams).</p>
+        <ul class="analytics-list analytics-list--compact">
+          <li *ngFor="let kv of objectEntries(analytics.reservationsPerMinuteSeriesLast60)">
+            <span class="mono">{{ kv[0] }}</span><strong>{{ kv[1] }}</strong>
+          </li>
+          <li *ngIf="!objectEntries(analytics.reservationsPerMinuteSeriesLast60).length" class="ija-text-muted">Vide</li>
+        </ul>
+      </div>
+      <div class="ija-card analytics-card motion-card-lift motion-fade-up motion-stagger-2">
+        <h3>Compteur tickets (Redis)</h3>
+        <p class="analytics-big">{{ analytics.ticketsSoldCounterRedis ?? '—' }}</p>
+        <p class="ija-text-muted ija-text-sm" *ngIf="analytics.generatedAt">Généré : {{ analytics.generatedAt | date:'short' }}</p>
+      </div>
+    </div>
+  </section>
+</div>

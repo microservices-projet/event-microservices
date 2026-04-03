@@ -1,0 +1,36 @@
+<div class="ija-page">
+  <h1 class="ija-page__title">Statistiques - Evenement #{{ eventId }}</h1>
+
+  <div class="stats-loading" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Chargement...</p>
+  </div>
+
+  <div class="stats-content" *ngIf="!loading && stats">
+    <div class="stats-overview">
+      <div class="stats-avg ija-card">
+        <span class="stats-avg__number">{{ stats.averageRating | number:'1.1-1' }}</span>
+        <span class="stats-avg__label">/ 5</span>
+        <p class="stats-avg__total">{{ stats.totalFeedbacks }} avis</p>
+      </div>
+
+      <div class="stats-distribution ija-card">
+        <h3>Distribution des notes</h3>
+        <div *ngFor="let entry of ratingEntries" class="stats-bar-row">
+          <span class="stats-bar-label">{{ entry[0] }} &#9733;</span>
+          <div class="stats-bar-track">
+            <div class="stats-bar-fill" [style.width.%]="barWidth(entry[1])"></div>
+          </div>
+          <span class="stats-bar-count">{{ entry[1] }}</span>
+        </div>
+      </div>
+    </div>
+
+    <a routerLink="/feedbacks" class="btn-ija btn-ija--ghost">&larr; Retour aux feedbacks</a>
+  </div>
+
+  <div *ngIf="!loading && !stats" class="stats-empty">
+    <p>Aucune statistique disponible pour cet evenement.</p>
+    <a routerLink="/feedbacks" class="btn-ija btn-ija--ghost">&larr; Retour</a>
+  </div>
+</div>

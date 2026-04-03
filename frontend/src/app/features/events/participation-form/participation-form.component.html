@@ -1,0 +1,15 @@
+<div class="ija-page">
+  <h1 class="ija-page__title">Détails du ticket</h1>
+
+  <app-ticket-purchase-card
+    *ngIf="eventId"
+    [eventId]="eventId"
+    [unitPrice]="unitPrice"
+  ></app-ticket-purchase-card>
+
+  <div class="purchase-back">
+    <a *ngIf="eventId" [routerLink]="['/events', eventId]" class="btn-ija btn-ija--ghost btn-ija--lg">
+      Retour
+    </a>
+  </div>
+</div>

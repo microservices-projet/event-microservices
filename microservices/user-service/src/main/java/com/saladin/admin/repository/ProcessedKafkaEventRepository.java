@@ -1,0 +1,8 @@
+package com.saladin.admin.repository;
+
+import com.saladin.admin.entity.ProcessedKafkaEvent;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ProcessedKafkaEventRepository extends JpaRepository<ProcessedKafkaEvent, String> {
+}
+

@@ -1,0 +1,27 @@
+<div class="admin-workspace">
+  <h1 class="ija-page__title">Admin Tickets</h1>
+  <form class="filter-bar" (ngSubmit)="onApply()">
+    <input class="ija-input" name="eventId" [(ngModel)]="eventId" placeholder="eventId" />
+    <input class="ija-input" name="userId" [(ngModel)]="userId" placeholder="userId" />
+    <input class="ija-input" name="statut" [(ngModel)]="statut" placeholder="statut" />
+    <input class="ija-input" name="typeTicket" [(ngModel)]="typeTicket" placeholder="typeTicket" />
+    <button type="submit" class="btn-ija btn-ija--primary" [disabled]="loading">Apply</button>
+    <button type="button" class="btn-ija btn-ija--ghost" [disabled]="loading" (click)="clearFilters()">Clear</button>
+  </form>
+  <div *ngIf="loading" class="list-loading"><div class="spinner"></div></div>
+  <div class="table-wrap" *ngIf="!loading">
+    <table class="admin-table">
+      <thead><tr><th>ID</th><th>Event</th><th>User</th><th>Status</th><th>Type</th><th>Price</th><th>Actions</th></tr></thead>
+      <tbody>
+        <tr *ngFor="let t of tickets">
+          <td>{{ t.idTicket }}</td><td>{{ t.eventId }}</td><td>{{ t.userId }}</td><td>{{ t.statut }}</td><td>{{ t.typeTicket }}</td><td>{{ t.prix }}</td>
+          <td class="actions">
+            <button class="btn-ija btn-ija--sm" (click)="setStatus(t, 'DISPONIBLE')">DISP</button>
+            <button class="btn-ija btn-ija--sm" (click)="setStatus(t, 'VENDU')">VENDU</button>
+            <button class="btn-ija btn-ija--sm" (click)="setStatus(t, 'ANNULE')">ANNUL</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

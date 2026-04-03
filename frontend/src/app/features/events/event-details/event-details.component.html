@@ -1,0 +1,216 @@
+<div class="ija-page" *ngIf="loading">
+  <div class="detail-loading">
+    <div class="spinner"></div>
+    <p>Chargement...</p>
+  </div>
+</div>
+
+<ng-container *ngIf="!loading && event">
+  <div class="detail-hero"
+       [style.backgroundImage]="'url(' + (event.imageUrl || 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1200') + ')'">
+    <div class="detail-hero__overlay">
+      <div class="detail-hero__content">
+        <span *ngIf="event.status" class="ija-badge detail-hero__badge"
+              [ngClass]="{
+                'ija-badge--success': event.status === 'PUBLISHED',
+                'ija-badge--warning': event.status === 'DRAFT',
+                'ija-badge--danger': event.status === 'CANCELLED',
+                'ija-badge--muted': event.status === 'COMPLETED'
+              }">{{ event.status }}</span>
+        <h1 class="detail-hero__title">{{ event.title }}</h1>
+        <p class="detail-hero__meta">
+          <span class="detail-hero__chip">{{ event.place }}</span>
+          <span class="detail-hero__chip">{{ event.date | date:'EEEE d MMMM yyyy' }}</span>
+          <span class="detail-hero__chip">{{ event.date | date:'HH:mm' }}</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ija-page detail-page">
+    <div class="detail-error" *ngIf="error">{{ error }}</div>
+
+    <button type="button" class="ija-collapse-toggle ija-hidden-md-up" (click)="toggleInfo()">
+      {{ infoCollapsed ? 'Afficher les informations' : 'Masquer les informations' }}
+    </button>
+
+    <div class="detail-info-strip ija-card" [class.ija-collapse--closed]="infoCollapsed">
+      <div class="detail-info-strip__grid">
+        <div class="detail-info-strip__item">
+          <span class="detail-info-strip__label">Date</span>
+          <span class="detail-info-strip__value">{{ event.date | date:'dd/MM/yyyy' }}</span>
+        </div>
+        <div class="detail-info-strip__item">
+          <span class="detail-info-strip__label">Heure</span>
+          <span class="detail-info-strip__value">{{ event.date | date:'HH:mm' }}</span>
+        </div>
+        <div class="detail-info-strip__item detail-info-strip__item--wide">
+          <span class="detail-info-strip__label">Lieu</span>
+          <span class="detail-info-strip__value">{{ event.place }}</span>
+        </div>
+        <div class="detail-info-strip__item">
+          <span class="detail-info-strip__label">Organisateur</span>
+          <span class="detail-info-strip__value">{{ organizerName }}</span>
+        </div>
+        <div class="detail-info-strip__item">
+          <span class="detail-info-strip__label">Prix</span>
+          <span class="detail-info-strip__value detail-info-strip__accent">
+            {{ event.price === 0 ? 'Gratuit' : event.price + ' TND' }}
+          </span>
+        </div>
+        <div class="detail-info-strip__item">
+          <span class="detail-info-strip__label">Places</span>
+          <span class="detail-info-strip__value">{{ event.nbPlaces }}</span>
+        </div>
+      </div>
+    </div>
+
+    <nav class="ija-tabs" role="tablist" aria-label="Sections evenement">
+      <button type="button" class="ija-tabs__btn" [class.active]="activeTab === 'about'" (click)="selectTab('about')">A propos</button>
+      <button type="button" class="ija-tabs__btn" [class.active]="activeTab === 'feedback'" (click)="selectTab('feedback')">Avis</button>
+      <button type="button" class="ija-tabs__btn" *ngIf="showReservationsTab" [class.active]="activeTab === 'reservations'" (click)="selectTab('reservations')">Reservations</button>
+    </nav>
+
+    <div class="ija-tab-panel" *ngIf="activeTab === 'about'">
+      <div class="detail-layout">
+        <div class="detail-layout__main">
+          <section class="ija-panel ija-card">
+            <h2 class="ija-panel__title">Description</h2>
+            <p class="detail-description">{{ event.description }}</p>
+          </section>
+
+          <section class="ija-panel ija-card" *ngIf="event.domaines?.length">
+            <h2 class="ija-panel__title">Themes</h2>
+            <div class="detail-tags">
+              <span *ngFor="let d of event.domaines" class="ija-badge ija-badge--info">{{ d }}</span>
+            </div>
+          </section>
+        </div>
+
+        <aside class="detail-layout__aside">
+          <div class="ija-panel ija-card ija-card--sticky">
+            <div class="detail-side-stats">
+              <div class="detail-side-stats__row">
+                <span>Likes</span>
+                <strong>{{ event.nbLikes }}</strong>
+              </div>
+              <div class="detail-side-stats__row" *ngIf="event.createdAt">
+                <span>Publie le</span>
+                <strong>{{ event.createdAt | date:'dd/MM/yyyy' }}</strong>
+              </div>
+            </div>
+
+            <div class="detail-side-actions">
+              <button *ngIf="!isAdmin" type="button" class="btn-ija btn-ija--outline btn-ija--sm" (click)="like()" [disabled]="dateExpired()">J'aime</button>
+
+              <ng-container *ngIf="!isAdmin">
+                <ng-container *ngIf="event.nbPlaces !== 0 && !dateExpired(); else noSeatsTpl">
+                  <app-ticket-purchase-card
+                    [eventId]="event.id"
+                    [unitPrice]="event.price"
+                    [eventTitle]="event.title"
+                  ></app-ticket-purchase-card>
+                </ng-container>
+                <ng-template #noSeatsTpl>
+                  <p class="ija-text-muted ija-text-sm">Evenement termine ou complet.</p>
+                </ng-template>
+              </ng-container>
+
+              <a *ngIf="canEdit" [routerLink]="['/events/edit', event.id]" class="btn-ija btn-ija--primary btn-ija--sm">Modifier</a>
+              <button *ngIf="canEdit" type="button" class="btn-ija btn-ija--danger btn-ija--sm" (click)="deleteEvent()">Supprimer</button>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <div class="ija-tab-panel" *ngIf="activeTab === 'feedback'">
+      <div class="detail-layout detail-layout--single">
+        <div class="ija-panel ija-card" *ngIf="feedbackStats">
+          <h2 class="ija-panel__title">Resume des avis</h2>
+          <p class="detail-stats-line">
+            <strong>{{ feedbackStats.averageRating | number:'1.1-1' }}</strong> / 5
+            &mdash; {{ feedbackStats.totalFeedbacks }} avis
+          </p>
+        </div>
+
+        <div class="ija-panel ija-card" *ngIf="auth.isLoggedIn">
+          <h2 class="ija-panel__title">Donner votre avis</h2>
+          <div class="ija-star-input" role="group" aria-label="Note">
+            <button type="button" *ngFor="let _ of [1,2,3,4,5]; let i = index"
+                    class="ija-star-input__btn"
+                    [class.ija-star-input__btn--on]="newRating >= i + 1"
+                    (click)="newRating = i + 1">
+              &#9733;
+            </button>
+          </div>
+          <label class="ija-form-group">
+            <span>Commentaire</span>
+            <textarea class="ija-input" rows="4" [(ngModel)]="newComment" placeholder="Partagez votre experience..."></textarea>
+          </label>
+          <p class="ija-hint">Les pieces jointes ne sont pas encore disponibles via l'API.</p>
+          <p class="ija-error-text" *ngIf="feedbackError">{{ feedbackError }}</p>
+          <button type="button" class="btn-ija btn-ija--primary" (click)="submitFeedback()" [disabled]="feedbackSubmitting">
+            {{ feedbackSubmitting ? 'Envoi...' : 'Publier' }}
+          </button>
+        </div>
+        <p *ngIf="!auth.isLoggedIn" class="ija-panel ija-card ija-text-muted">Connectez-vous pour laisser un avis.</p>
+
+        <div class="ija-panel ija-card">
+          <h2 class="ija-panel__title">Avis recents</h2>
+          <div class="list-loading" *ngIf="feedbackLoading"><div class="spinner"></div></div>
+          <ul class="ija-feedback-list" *ngIf="!feedbackLoading && feedbacks.length">
+            <li *ngFor="let fb of feedbacks" class="ija-feedback-row ija-card ija-card--flat">
+              <div class="ija-feedback-row__head">
+                <span class="ija-stars" aria-hidden="true">
+                  <span *ngFor="let s of starsPreview(fb.rating)" [class.ija-stars__on]="s === 1">&#9733;</span>
+                </span>
+                <span class="ija-badge" [ngClass]="feedbackStatusClass(fb.status)">{{ fb.status }}</span>
+              </div>
+              <p class="ija-feedback-row__comment">{{ fb.comment }}</p>
+              <div class="ija-feedback-row__meta">
+                <span *ngIf="fb.username">{{ fb.username }}</span>
+                <span>{{ fb.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+              </div>
+            </li>
+          </ul>
+          <p *ngIf="!feedbackLoading && !feedbacks.length" class="ija-text-muted">Pas encore d'avis.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="ija-tab-panel" *ngIf="activeTab === 'reservations' && showReservationsTab">
+      <div class="ija-panel ija-card">
+        <h2 class="ija-panel__title">Reservations pour cet evenement</h2>
+        <p class="ija-text-muted ija-text-sm">Donnees rafraichies automatiquement lorsque cet onglet est actif.</p>
+        <div class="ija-table-wrap">
+          <table class="ija-table" *ngIf="eventReservations.length">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Utilisateur</th>
+                <th>Places</th>
+                <th>Total</th>
+                <th>Statut</th>
+                <th>Paiement</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let r of eventReservations">
+                <td><a [routerLink]="['/reservations', r.id]">{{ r.id | slice:0:8 }}...</a></td>
+                <td>{{ r.username || r.userId }}</td>
+                <td>{{ r.numberOfPlaces }}</td>
+                <td>{{ r.totalPrice }} TND</td>
+                <td><span class="ija-badge" [ngClass]="reservationStatusClass(r.status)">{{ r.status }}</span></td>
+                <td><span class="ija-badge" [ngClass]="paymentBadgeClass(r.paymentStatus)">{{ r.paymentStatus }}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p *ngIf="!eventReservations.length" class="ija-text-muted">Aucune reservation.</p>
+      </div>
+    </div>
+
+    <a routerLink="/events" class="btn-ija btn-ija--ghost detail-back">&larr; Retour aux evenements</a>
+  </div>
+</ng-container>

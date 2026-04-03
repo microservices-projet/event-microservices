@@ -1,0 +1,25 @@
+<div class="ija-page" *ngIf="user">
+  <div class="profile-header">
+    <div class="profile-avatar">{{ user.username.charAt(0).toUpperCase() }}</div>
+    <h1 class="profile-name">{{ user.username }}</h1>
+    <p class="profile-email">{{ user.email }}</p>
+    <div class="profile-badges">
+      <span class="ija-badge ija-badge--primary">{{ user.role }}</span>
+      <span class="ija-badge ija-badge--success">{{ user.status }}</span>
+    </div>
+  </div>
+
+  <hr class="ija-divider">
+
+  <h2 class="ija-section__title">Acces rapide</h2>
+  <div class="ija-grid ija-grid--4">
+    <a *ngFor="let link of quickLinks" [routerLink]="link.route" class="quick-link ija-card">
+      <span class="quick-link__label">{{ link.label }}</span>
+      <span class="quick-link__arrow">&rarr;</span>
+    </a>
+  </div>
+
+  <hr class="ija-divider">
+
+  <button class="btn-ija btn-ija--danger" (click)="logout()">Se deconnecter</button>
+</div>
